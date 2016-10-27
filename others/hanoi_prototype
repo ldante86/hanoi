@@ -1,0 +1,106 @@
+#!/bin/bash -
+#
+# SCRIPT: hanoi_prototype.sh
+# AUTHOR: Luciano D. Cecere
+# DATE: 03/01/2015-01:32:56 PM
+########################################################################
+#
+# hanoi_prototype.sh - The Towers of Hanoi
+# Copyright (C) 2015 Luciano D. Cecere <ldante86@aol.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+########################################################################
+
+export PATH=/bin:/usr/bin
+unalias -a
+
+trap 'clear && stty sane && exit 0' INT
+
+names=( {a..i} )
+a=1 b=2 c=3 d=0 e=0 f=0 g=0 h=0 i=0
+MOVE=0
+
+_main()
+{ 
+    while [ $MOVE -ge 0 ]
+    do
+      _show_game
+      _get_move
+      _validate_towers
+    done
+}
+
+_get_move()
+{
+    printf "\n\tMove: " ; read from to
+    case $from in
+      [Ee]|[Qq])  clear
+                  exit 0
+    esac
+
+    [[ $from != [1-9] ]] && _main
+    [[ $to != [1-9] ]] && _main
+
+    coord1=${names[from-1]}
+    coord2=${names[to-1]}
+
+    [ $(eval echo \$${coord1}) = $(eval echo \$${coord2}) ] && _main
+
+    last_coord=${coord2}
+
+    if [ $(eval echo \$${coord2}) = 0 ]; then
+      eval ${coord2}=$(eval echo \$${coord1})
+      eval ${coord1}=0
+    else
+      ((--MOVE))
+    fi
+}
+
+_undo_move()
+{
+    eval ${coord1}=$(eval echo \$${last_coord})
+    eval ${coord2}=0
+    ((--MOVE))
+}    
+
+_validate_towers()
+{
+    [ $a -gt $b -o $b -gt $c -o $a -gt $c ] && _undo_move
+    [ $d -gt $e -o $e -gt $f -o $d -gt $f ] && _undo_move
+    [ $g -gt $h -o $h -gt $i -o $g -gt $i ] && _undo_move
+    ((++MOVE))
+
+   if [ $g$h$i = 123 ]; then
+     _show_game
+     printf "\n\t====== YOU WIN ======\n\n\n"
+     exit 0
+   fi
+}
+
+_show_game()
+{
+    clear
+    printf "\n\t=====================\n"
+    printf "\t= T O W E R S   O F =\n"
+    printf "\t=====================\n"
+    printf "\t==  ${a}     ${d}     ${g}  ==\n"
+    printf "\t==  ${b}     ${e}     ${h}  ==\n"
+    printf "\t==  ${c}     ${f}     ${i}  ==\n"
+    printf "\t=====================\n"
+    printf "\t===== H A N O I =====\n"
+    printf "\t===================== $MOVE\n"
+}
+
+_main

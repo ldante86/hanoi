@@ -1,0 +1,40 @@
+
+README for hanoi.sh
+
+I wrote this game because I've never seen a terminal version of
+Towers of Hanoi.
+
+The object of Towers of Hanoi is to reassemble the tower of peg one
+over to peg three. A disc can only be placed on top of a larger disc.
+
+The player can choose from 3 to 8 discs. Included is a game solver
+that can solve for any number of discs (1-99) -- the length of the
+output might never reach its end!
+
+Gameplay might not be intuitive at first. Each tower has a number of
+disc spots and the spot numbers are continuous from the top spot of
+the first tower to the last spot of the last tower. For example, in a
+five disc game:
+		  ____++____ __________ __________
+  #		  ___++++___ __________ __________               #
+		  __++++++__ __________ __________
+  #		  _++++++++_ __________ __________	         #
+	          ++++++++++ __________ __________  0
+  #                    5         10         15                   #
+
+The numbers beneath indicate the lowest spot of each tower. The tip of
+tower one is always one. To move the top of tower one to the bottom
+spot of tower three, enter coordinates 1 15 at the prompt. Invalid
+or conflicting moves will be ignored and will not affect the game. The
+number to the right of tower three is the move counter. Each game has
+a minimum number of moves for completion.
+
+There are three gameplay commands:
+  e	exit the game and clear the screen
+
+  m	abort current game and go back to game menu
+
+  u	undo the last move -- this only works only if the last move
+        was a valid move. Undo rolls back the move counter by one;
+        undo cannot be used twice in a row.
+

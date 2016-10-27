@@ -1,0 +1,27 @@
+
+== 8 2015 ==
+The _undo_move() function is bugged in some situations. For example,
+in the 3 disc game, the coordinates:
+	1 9
+	3 2
+will trigger _undo_move() without error, but if the command `u' is
+used after that, _undo_move() is triggered again. In this instance,
+_undo_move() no longer has the last valid coordinates, only the
+coordinates of the last invalid position. This causes the largest
+disc to disappear, and the game is no longer playable.
+
+I could create a move history function that could be used to reference
+any valid coordinate from the start of the game. This would enable the
+player to undo as many times as necessary.
+
+_move_history() requirements:
+1. history items are stored in an array.
+	${history[@]}
+2. only valid coordinates are stored.
+3. invalid coordinates are skipped.
+4. history items are accessed by twos from the end of the array.
+	ret1=${history[-2]} # from
+	ret2=${history[-1]} # to
+5. accessed items are erased after use so new items can replace them.
+	unset history[${#history[@]}-1] #remove to
+	unset history[${#history[@]}-1] #remove from
